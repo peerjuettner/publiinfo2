@@ -1,6 +1,7 @@
 import * as React from "react";
 import AppHeader from "./components/Header/Header";
 import BikesPage from "./components/BikesPage/BikesPage";
+import InfoPage from "./components/InfoPage/InfoPage";
 
 export interface IPubliInfoProps {}
 export type PageType = "Info" | "Bikes" | "Stations";
@@ -23,6 +24,7 @@ export default class PubliInfo extends React.Component<IPubliInfoProps, IPubliIn
       <>
         <AppHeader onNavigationChange={this.onNavigationChange} />
         {this.state.activePage === "Bikes" && <BikesPage />}
+        {this.state.activePage === "Info" && <InfoPage />}
       </>
     );
   }
