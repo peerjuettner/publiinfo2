@@ -32,34 +32,3 @@ export default class PubliInfo extends React.Component<IPubliInfoProps, IPubliIn
     this.setState({ activePage: type, showMenu: false });
   };
 }
-
-/*
-
-import React from "react";
-import "./App.css";
-import HeaderAppBar from "./Components/Header/HeaderAppBar";
-export interface IAppProps {}
-
-export interface IAppState {
-  activePage: "Info" | "Bikes" | "Stations";
-}
-
-export default class App extends React.Component<IAppProps, IAppState> {
-  constructor(props: IAppProps) {
-    super(props);
-
-    this.state = {
-      activePage: "Bikes"
-    };
-  }
-  public render() {
-    return (
-      <div className="App">
-        <HeaderAppBar onNavigationChange={this.onNavigationChange} />
-      </div>
-    );
-  }
-}
-
-
-*/
