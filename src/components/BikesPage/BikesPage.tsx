@@ -1,29 +1,27 @@
 import * as React from "react";
-import { Map, Marker, TileLayer, ZoomControl } from "react-leaflet";
+import { Map, Marker, TileLayer, ZoomControl, LatLng, Viewport } from "react-leaflet";
 
-export interface IBikesPageProps {}
-
-export interface IBikesPageState {
-  lat: number;
-  lng: number;
-  zoom: number;
+export interface IBikesPageProps {
+  updateViewport: (viewport: Viewport) => void;
+  viewport: Viewport;
 }
+
+export interface IBikesPageState {}
 
 export default class BikesPage extends React.Component<IBikesPageProps, IBikesPageState> {
   constructor(props: IBikesPageProps) {
     super(props);
-
-    this.state = {
-      lat: 46.948,
-      lng: 7.4474,
-      zoom: 13
-    };
   }
 
   public render() {
     return (
       <>
-        <Map center={[this.state.lat, this.state.lng]} zoom={13} zoomControl={false}>
+        <Map
+          center={this.props.viewport.center!}
+          zoom={13}
+          zoomControl={false}
+          onViewportChanged={this.props.updateViewport}
+        >
           <TileLayer
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -33,4 +31,8 @@ export default class BikesPage extends React.Component<IBikesPageProps, IBikesPa
       </>
     );
   }
+
+  componentWillUnmount = () => {
+    //this.props.updateMapState(this.state.lat, this.state.lng, this.state.zoom);
+  };
 }
