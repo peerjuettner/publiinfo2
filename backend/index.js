@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
-const Data = require("./schema");
+const Data = require("./Schema");
 
 const API_PORT = 3001;
 const app = express();
@@ -30,17 +30,19 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(bodyParser.json());
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
-router.get("/getStations", (req, res) => {
+
+router.get("/stations", (req, res) => {
     Data.m_station.find((err, data) => {
         if (err) return res.json({
-            success: false,
             error: err
         });
-        return res.json({
-            success: true,
-            data: data
-        });
+        return res.json(data);
     });
 });
 
