@@ -30,7 +30,7 @@ app.use(
   })
 );
 app.use(bodyParser.json());
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -51,9 +51,15 @@ router.get("/stations", (req, res) => {
 // id: id of a given station
 router.get("/station/bikes/:id", (req, res) => {
   const id = req.params.id;
-  Data.m_bike.find({ station: id }, (err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
+  Data.m_bike.find({
+    station: id
+  }, (err, data) => {
+    if (err) return res.json({
+      success: false,
+      error: err
+    });
+    return res.json(
+      data);
   });
 });
 
