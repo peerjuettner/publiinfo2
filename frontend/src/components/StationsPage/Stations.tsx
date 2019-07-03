@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Map, TileLayer, ZoomControl, Viewport, Marker } from "react-leaflet";
+import { Map, TileLayer, ZoomControl, Viewport, Marker, Popup } from "react-leaflet";
 import axios from "axios";
+import L from "leaflet";
 
 type Station = {
   _id: number;
@@ -34,6 +35,8 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
   }
 
   public render() {
+    const customMarker = L.icon({ iconUrl: require("../../images/location.svg") });
+
     return (
       <>
         <Map center={this.props.viewport.center!} zoom={this.props.viewport.zoom!} zoomControl={false}>
@@ -43,7 +46,11 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
           />
           <ZoomControl position="topright" />
           {this.state.stations &&
-            this.state.stations.map(s => <Marker position={[s.lat, s.long] as [number, number]} key={s._id} />)}
+            this.state.stations.map(s => (
+              <Marker icon={customMarker} position={[s.lat, s.long] as [number, number]} key={s._id}>
+                <Popup>{"This is a test"}</Popup>
+              </Marker>
+            ))}
         </Map>
       </>
     );
