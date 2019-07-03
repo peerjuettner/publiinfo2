@@ -2,8 +2,9 @@ import * as React from "react";
 import { Map, TileLayer, ZoomControl, Viewport, Marker, Popup } from "react-leaflet";
 import axios from "axios";
 import L from "leaflet";
-import { Typography, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import BikesPage from "../BikesPage/BikesPage";
+import { Typography, List, ListItem, ListItemIcon, ListItemText, Drawer } from "@material-ui/core";
+import BikeIcon from "@material-ui/icons/DirectionsBike";
+import PowerIcon from "@material-ui/icons/Power";
 
 interface Station {
   _id: number;
@@ -32,8 +33,9 @@ export interface IStationsPageProps {
 }
 
 export interface IStationsPageState {
-  stations: Array<Station>;
+  stations: Array<Station> | undefined;
   bikes: Array<Bike>;
+  showBikes: boolean;
 }
 
 export default class StationsPage extends React.Component<IStationsPageProps, IStationsPageState> {
@@ -41,7 +43,8 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
     super(props);
     this.state = {
       stations: [],
-      bikes: []
+      bikes: [],
+      showBikes: false
     };
   }
 
@@ -58,23 +61,35 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
           <ZoomControl position="topright" />
           {stations &&
             stations.map(s => (
-              <Marker icon={customMarker} position={[s.lat, s.long] as [number, number]} key={s._id}>
-                <Popup onClick={getBikesForStations(s._id).then(res => this.setState({ bikes: res! }))}>
-                  <Typography variant="h5" gutterBottom>
+              <Marker
+                icon={customMarker}
+                position={[s.lat, s.long] as [number, number]}
+                key={s._id}
+                onClick={() => getBikesForStations(s._id).then(res => this.setState({ bikes: res!, showBikes: true }))}
+              >
+                <Popup>
+                  <Typography variant="h6" gutterBottom>
                     {s.name}
                   </Typography>
-                  {/* <List component="nav" aria-label="Main mailbox folders">
-                    {bikes &&
-                      bikes.map(b => (
-                        <ListItem button>
-                          <ListItemText primary={b.name} />
-                        </ListItem>
-                      ))}
-                  </List> */}
                 </Popup>
               </Marker>
             ))}
         </Map>
+        <Drawer
+          anchor="right"
+          open={this.state.showBikes && this.state.bikes.length !== 0}
+          onClose={() => this.setState({ showBikes: false })}
+        >
+          <List>
+            {bikes &&
+              bikes.map(bike => (
+                <ListItem button key={bike.name} onClick={() => console.log("clicked on bike " + bike.name)}>
+                  <ListItemIcon>{bike.type === 2 ? <PowerIcon /> : <BikeIcon />}</ListItemIcon>
+                  <ListItemText primary={bike.name} />
+                </ListItem>
+              ))}
+          </List>
+        </Drawer>
       </>
     );
   }
