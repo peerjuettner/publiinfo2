@@ -17,7 +17,7 @@ export interface IPubliInfoState {
 export default class PubliInfo extends React.Component<IPubliInfoProps, IPubliInfoState> {
   constructor(props: IPubliInfoProps) {
     super(props);
-    this.state = { showMenu: false, activePage: "Bikes", viewport: { center: [46.948, 7.4474], zoom: 10 } };
+    this.state = { showMenu: false, activePage: "Stations", viewport: { center: [46.948, 7.4474], zoom: 10 } };
   }
   onToggleMenu = () => {
     this.setState({ showMenu: !this.state.showMenu });

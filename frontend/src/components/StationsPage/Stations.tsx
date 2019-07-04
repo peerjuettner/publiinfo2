@@ -5,6 +5,7 @@ import L from "leaflet";
 import { Typography, List, ListItem, ListItemIcon, ListItemText, Drawer } from "@material-ui/core";
 import BikeIcon from "@material-ui/icons/DirectionsBike";
 import PowerIcon from "@material-ui/icons/Power";
+import { makeStyles } from "@material-ui/styles";
 
 interface Station {
   _id: number;
@@ -23,7 +24,7 @@ interface Station {
 interface Bike {
   id: number;
   name: string;
-  type: number;
+  biketype: number;
   station: number;
 }
 
@@ -35,7 +36,7 @@ export interface IStationsPageProps {
 export interface IStationsPageState {
   stations: Array<Station> | undefined;
   bikes: Array<Bike>;
-  showBikes: boolean;
+  currentStation: Station | null;
 }
 
 export default class StationsPage extends React.Component<IStationsPageProps, IStationsPageState> {
@@ -44,13 +45,13 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
     this.state = {
       stations: [],
       bikes: [],
-      showBikes: false
+      currentStation: null
     };
   }
 
   public render() {
     const customMarker = L.icon({ iconUrl: require("../../images/location.svg"), iconAnchor: [12, 0] });
-    const { bikes, stations } = this.state;
+    const { bikes, stations, currentStation } = this.state;
     return (
       <>
         <Map center={this.props.viewport.center!} zoom={this.props.viewport.zoom!} zoomControl={false}>
@@ -65,7 +66,9 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
                 icon={customMarker}
                 position={[s.lat, s.long] as [number, number]}
                 key={s._id}
-                onClick={() => getBikesForStations(s._id).then(res => this.setState({ bikes: res!, showBikes: true }))}
+                onClick={() =>
+                  getBikesForStations(s._id).then(res => this.setState({ bikes: res!, currentStation: s! }))
+                }
               >
                 <Popup>
                   <Typography variant="h6" gutterBottom>
@@ -76,15 +79,27 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
             ))}
         </Map>
         <Drawer
+          className={"drawer-right"}
+          variant="persistent"
           anchor="right"
-          open={this.state.showBikes && this.state.bikes.length !== 0}
-          onClose={() => this.setState({ showBikes: false })}
+          open={currentStation !== null && this.state.bikes.length !== 0}
+          onClose={() => this.setState({ currentStation: null })}
         >
+          {currentStation && (
+            <>
+              <Typography variant="h4" className={"drawer-right-title"}>
+                {currentStation.name}
+              </Typography>
+              <Typography variant="h5">
+                {`${currentStation.address}, ${currentStation.zipcode} ${currentStation.city}`}
+              </Typography>
+            </>
+          )}
           <List>
             {bikes &&
               bikes.map(bike => (
-                <ListItem button key={bike.name} onClick={() => console.log("clicked on bike " + bike.name)}>
-                  <ListItemIcon>{bike.type === 2 ? <PowerIcon /> : <BikeIcon />}</ListItemIcon>
+                <ListItem button key={bike.name} onClick={() => console.log("clicked on bike " + bike.biketype)}>
+                  <ListItemIcon>{bike.biketype === 2 ? <PowerIcon /> : <BikeIcon />}</ListItemIcon>
                   <ListItemText primary={bike.name} />
                 </ListItem>
               ))}
