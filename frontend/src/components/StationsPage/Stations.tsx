@@ -5,21 +5,7 @@ import L from "leaflet";
 import { Typography, List, ListItem, ListItemIcon, ListItemText, Drawer } from "@material-ui/core";
 import BikeIcon from "@material-ui/icons/DirectionsBike";
 import PowerIcon from "@material-ui/icons/Power";
-import { makeStyles } from "@material-ui/styles";
-
-interface Station {
-  _id: number;
-  lat: number;
-  long: number;
-  state: number;
-  name: string;
-  address: string;
-  zipcode: string;
-  city: string;
-  network: string;
-  created: Date;
-  station: number;
-}
+import { Station } from "../../publiinfo";
 
 interface Bike {
   id: number;
@@ -31,10 +17,10 @@ interface Bike {
 export interface IStationsPageProps {
   updateViewport: (viewport: Viewport) => void;
   viewport: Viewport;
+  stations: Array<Station> | null;
 }
 
 export interface IStationsPageState {
-  stations: Array<Station> | undefined;
   bikes: Array<Bike>;
   currentStation: Station | null;
 }
@@ -43,7 +29,6 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
   constructor(props: IStationsPageProps) {
     super(props);
     this.state = {
-      stations: [],
       bikes: [],
       currentStation: null
     };
@@ -51,7 +36,8 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
 
   public render() {
     const customMarker = L.icon({ iconUrl: require("../../images/location.svg"), iconAnchor: [12, 0] });
-    const { bikes, stations, currentStation } = this.state;
+    const { bikes, currentStation } = this.state;
+    const { stations } = this.props;
     return (
       <>
         <Map center={this.props.viewport.center!} zoom={this.props.viewport.zoom!} zoomControl={false}>
@@ -108,19 +94,7 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
       </>
     );
   }
-  async componentDidMount() {
-    const st = await getStations();
-    this.setState({ stations: st! });
-  }
 }
-
-const getStations = async () => {
-  try {
-    return (await axios.get<Array<Station>>("http://localhost:3001/api/stations")).data;
-  } catch (error) {
-    console.error(error.response);
-  }
-};
 
 const getBikesForStations = async (id: number) => {
   try {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Map, Marker, TileLayer, ZoomControl, LatLng, Viewport } from "react-leaflet";
+import { Map, TileLayer, ZoomControl, Viewport } from "react-leaflet";
 
 export interface IBikesPageProps {
   updateViewport: (viewport: Viewport) => void;
