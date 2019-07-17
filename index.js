@@ -2,13 +2,19 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 const Data = require("./Schema");
+const path = require("path")
+require("dotenv").config()
+
 
 const API_PORT = 3001;
 const app = express();
 const router = express.Router();
 
+
+app.use(express.static(path.join(__dirname, "../frontend/public", "build")))
+
 // this is our MongoDB database
-const dbRoute = "mongodb://10.8.0.1:27017/publibike";
+const dbRoute = process.env.MONGODB_CONNECTION || "mongodb://10.8.0.1:27017/publibike";
 
 // connects our back end code with the database
 mongoose.connect(dbRoute, {
@@ -67,4 +73,9 @@ router.get("/station/bikes/:id", (req, res) => {
 app.use("/api", router);
 
 // launch our backend into a port
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/public", "build", "index.html"));
+});
+
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
