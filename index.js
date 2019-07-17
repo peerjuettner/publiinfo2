@@ -6,12 +6,12 @@ const path = require("path")
 require("dotenv").config()
 
 
-const API_PORT = 3001;
+const API_PORT = process.env.PORT || 5000;
 const app = express();
 const router = express.Router();
 
 
-app.use(express.static(path.join(__dirname, "../frontend/public", "build")))
+app.use(express.static(path.join(__dirname, "frontend", "build")))
 
 // this is our MongoDB database
 const dbRoute = process.env.MONGODB_CONNECTION || "mongodb://10.8.0.1:27017/publibike";
@@ -75,7 +75,7 @@ app.use("/api", router);
 // launch our backend into a port
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/public", "build", "index.html"));
+  res.sendFile(path.join(__dirname, "frontend", "build", "index.html"));
 });
 
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
