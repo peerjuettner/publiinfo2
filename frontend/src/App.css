@@ -39,5 +39,9 @@
 }
 
 .drawer-right>* {
-  width: 250px
+  width: 20rem;
+}
+
+.drawer-right-title {
+  padding: 1rem
 }

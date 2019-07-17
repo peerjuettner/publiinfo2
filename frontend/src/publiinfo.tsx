@@ -62,7 +62,7 @@ export default class PubliInfo extends React.Component<IPubliInfoProps, IPubliIn
 
 const getStations = async () => {
   try {
-    return (await Axios.get<Array<Station>>("http://localhost:3001/api/stations")).data;
+    return (await Axios.get<Array<Station>>("/api/stations")).data;
   } catch (error) {
     console.error(error.response);
   }

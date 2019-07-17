@@ -98,7 +98,7 @@ export default class StationsPage extends React.Component<IStationsPageProps, IS
 
 const getBikesForStations = async (id: number) => {
   try {
-    return (await axios.get<Array<Bike>>(`http://localhost:3001/api/station/bikes/${id}`)).data;
+    return (await axios.get<Array<Bike>>(`/api/station/bikes/${id}`)).data;
   } catch (error) {
     console.error(error.response);
   }
